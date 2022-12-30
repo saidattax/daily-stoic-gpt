@@ -84,9 +84,13 @@ export async function renderQuote(
 
             const ts = Date.now();
 
-            fs.mkdirSync(".\\renders");
+            const renderDir = ".\\renders";
 
-            const path = `.\\renders\\${ts}.png`;
+            if (!fs.existsSync(renderDir)) {
+                fs.mkdirSync(renderDir);
+            }
+
+            const path = `${renderDir}\\${ts}.png`;
 
             for (let i = 0; i < elements.length; i++) {
                 try {

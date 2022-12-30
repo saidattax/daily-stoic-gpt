@@ -3,7 +3,7 @@
     "scripts": {
         "build": "tsc",
         "dev": "tsc && node build/dailystoic.js",
-        "test": "tsc && node build/dailystoic.js"
+        "test": "tsc && node build/test.js"
     },
     "dependencies": {
         "@types/lodash-es": "^4.17.6",
