@@ -226,7 +226,7 @@ The explanation must be simple, without attribution and must begin and end with 
  * An express server to serve HTML and images for the quote to render.
  * We will take a screenshot of it using puppeteer.
  */
-function startRenderSite() {
+function startStaticServer() {
     const app = express();
 
     const __dirname = path.resolve();
@@ -241,8 +241,6 @@ function startRenderSite() {
 }
 
 async function main() {
-    startRenderSite();
-
     const philosopher = sample(PHILOSOPHERS);
 
     console.log("chose philosopher", philosopher);
@@ -260,6 +258,8 @@ async function main() {
     await sendRenderToTelegramChannel(file, caption);
 }
 
-main();
+startStaticServer();
 
+// comment these during testing
+main();
 const job = schedule.scheduleJob("1 10 * * *", main);
