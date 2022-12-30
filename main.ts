@@ -11,6 +11,8 @@ import fs from "fs";
 
 dotenv.config();
 
+console.log("Using email...", process.env.OPENAI_LOGIN_EMAIL);
+
 // list of philosophers we will use
 const PHILOSOPHERS = [
     { name: "Marcus Aurelius", img: "./marcus.jpg" },
