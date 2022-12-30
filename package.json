@@ -2,7 +2,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "dev": "tsc && node build/dailystoic.js",
+        "dev": "tsc && node build/main.js",
         "test": "tsc && node build/test.js"
     },
     "dependencies": {
