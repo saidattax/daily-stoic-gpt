@@ -6,8 +6,10 @@ Huge thanks to Travis Fischer's ChatGPT API - https://github.com/transitive-bull
 
 Telegram Channel Link - https://t.me/dailystoicquotes
 
+<p align="center">
+  <img alt="Example usage" src="./media/tgpic.png">
+</p>
+
 ## License
 
 MIT License © Sai Datta
-
-<a href="https://twitter.com/saidattax">Follow me on twitter <img src="https://storage.googleapis.com/saasify-assets/twitter-logo.svg" alt="twitter" height="24px" align="center"></a>
