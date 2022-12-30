@@ -3,7 +3,7 @@ import {
     renderQuote,
     extractQuote,
     Philosoper,
-} from "./dailystoic.js";
+} from "./main.js";
 
 async function test() {
     const testPhil: Philosoper = {
