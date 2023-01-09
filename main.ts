@@ -261,5 +261,9 @@ async function main() {
 startStaticServer();
 
 // comment these during testing
-main();
+
+// TODO: provide a param which enables main()
+var args = process.argv.slice(2);
+if (args[0]) main();
+
 const job = schedule.scheduleJob("1 10 * * *", main);
