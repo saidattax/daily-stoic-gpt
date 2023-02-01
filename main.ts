@@ -1,4 +1,4 @@
-import { ChatGPTAPIBrowser } from "chatgpt";
+import { ChatGPTAPI } from "chatgpt";
 import puppeteer from "puppeteer";
 import { Telegraf } from "telegraf";
 import schedule from "node-schedule";
@@ -130,17 +130,17 @@ async function sendRenderToTelegramChannel(file: string, caption?: string) {
 async function getUniqueQuote({
     conversationId,
     parentMessageId,
-    inputResponse,
+    responseText,
     api,
 }: {
     conversationId: string;
     parentMessageId: string;
-    inputResponse: string;
-    api: any;
+    responseText: string;
+    api: ChatGPTAPI;
 }): Promise<{ quote: string; caption: string }> {
     // get quote and caption
-    const quote = extractQuote(inputResponse).trim();
-    const caption = extractSummary(inputResponse).trim();
+    const quote = extractQuote(responseText).trim();
+    const caption = extractSummary(responseText).trim();
 
     // first check if the input quote exists
     const elements = await datastore.find({ quote: quote });
@@ -163,13 +163,13 @@ async function getUniqueQuote({
 
         console.log("Got different quote");
 
-        console.log(result.response);
+        console.log(result.text);
 
         // call this function again recursively
         const { caption, quote } = await getUniqueQuote({
             conversationId,
             parentMessageId,
-            inputResponse: result.response,
+            responseText: result.text,
             api,
         });
 
@@ -181,15 +181,9 @@ async function getRandomQuote(
     philosopher: string
 ): Promise<{ quote: string; caption: string }> {
     // use puppeteer to bypass cloudflare (headful because of captchas)
-    const api = new ChatGPTAPIBrowser({
-        email: process.env.OPENAI_LOGIN_EMAIL,
-        password: process.env.OPENAI_LOGIN_PASSWORD,
-        isGoogleLogin: true,
-        markdown: false,
-        // debug: true,
+    const api = new ChatGPTAPI({
+        apiKey: process.env.OPENAI_API_KEY,
     });
-
-    await api.initSession();
 
     const prompt = `Tell me a random quote by ${philosopher}.
 
@@ -208,16 +202,14 @@ The explanation must be simple, without attribution and must begin and end with 
     const { quote, caption } = await getUniqueQuote({
         api,
         conversationId: result.conversationId,
-        parentMessageId: result.messageId,
-        inputResponse: result.response,
+        parentMessageId: result.id,
+        responseText: result.text,
     });
 
     await datastore.insert({
         quote: quote,
         created: Date.now(),
     });
-
-    await api.closeSession();
 
     return { quote, caption };
 }
