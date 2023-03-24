@@ -128,12 +128,10 @@ async function sendRenderToTelegramChannel(file: string, caption?: string) {
  * Function to get unique quote. Compares against historically sent quotes
  */
 async function getUniqueQuote({
-    conversationId,
     parentMessageId,
     responseText,
     api,
 }: {
-    conversationId: string;
     parentMessageId: string;
     responseText: string;
     api: ChatGPTAPI;
@@ -152,11 +150,13 @@ async function getUniqueQuote({
             caption,
         };
     } else {
+        // wait for 1 second
+        await new Promise((r) => setTimeout(r, 1000));
+
         // send a follow-up to get a different quote
         const result = await api.sendMessage(
             "Can you tell me a different one? It should not be the same as you've already said before.",
             {
-                conversationId: conversationId,
                 parentMessageId: parentMessageId,
             }
         );
@@ -167,7 +167,6 @@ async function getUniqueQuote({
 
         // call this function again recursively
         const { caption, quote } = await getUniqueQuote({
-            conversationId,
             parentMessageId,
             responseText: result.text,
             api,
@@ -189,7 +188,7 @@ async function getRandomQuote(
 
 The quote should being and end with the @ symbol.
 
-The explanation must be simple, without attribution and must begin and end with $ symbol.`;
+You must also give a short explanation about the quote and the explanation must begin and end with $ symbol.`;
 
     console.log("sending prompt...");
 
@@ -201,7 +200,6 @@ The explanation must be simple, without attribution and must begin and end with 
 
     const { quote, caption } = await getUniqueQuote({
         api,
-        conversationId: result.conversationId,
         parentMessageId: result.id,
         responseText: result.text,
     });
@@ -254,7 +252,6 @@ startStaticServer();
 
 // comment these during testing
 
-// TODO: provide a param which enables main()
 var args = process.argv.slice(2);
 if (args[0]) main();
 
